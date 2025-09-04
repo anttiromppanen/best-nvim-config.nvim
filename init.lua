@@ -49,7 +49,6 @@ vim.keymap.set('n', '<leader>fs', builtin.keymaps, { desc = 'Search keymaps - Te
 -- Enable diagnostic display
 vim.diagnostic.config({
   -- virtual_text = true,      -- show inline text
-  signs = true,             -- show signs in the gutter
   underline = true,         -- underline doesn't work on every os and terminal
   update_in_insert = false, -- don’t update while typing
   severity_sort = true,     -- sort by severity
@@ -79,6 +78,7 @@ vim.diagnostic.config({
   },
 })
 
+-- Disable full-line highlights
 vim.api.nvim_set_hl(0, "DiagnosticFloatingError", { bg = "#1e1e2e", fg = "#f38ba8" })
 vim.api.nvim_set_hl(0, "DiagnosticFloatingWarn", { bg = "#1e1e2e", fg = "#f9e2af" })
 vim.api.nvim_set_hl(0, "DiagnosticFloatingInfo", { bg = "#1e1e2e", fg = "#89b4fa" })
