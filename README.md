@@ -60,11 +60,11 @@ If everything went as expected you should see Lazy.nvim install all the packages
 
 📂 <b>root</b> <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>init.lua</b> - main file, inits the config <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>diagnostics.lua</b> - diagnostics ui settings <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>keymaps.lua</b> - contains mainly global keymaps (some are inside plugins/plugin.lua) <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>README.md</b> <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>lazy-lock.json</b> <br />
 &nbsp;&nbsp;&nbsp;&nbsp;📂 <b>/lua</b> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>diagnostics.lua</b> - diagnostics ui settings <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>keymaps.lua</b> - contains mainly global keymaps (some are inside plugins/plugin.lua) <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📂 <b>/config</b> - directory for config <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📂 <b>/plugins</b> - directory for lazy.nvim to install plugins from <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📂 <b>/playground</b> - for testing out stuff without accidentally ruining configs
