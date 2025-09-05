@@ -29,6 +29,20 @@ return {
     -- Load the LSP configuration module
     local lspconfig = require("lspconfig")
 
+    -- Load lsp_signature
+    local lsp_signature = require("lsp_signature")
+
+    -- Common on_attach function
+    local on_attach = function(client, bufnr)
+      -- enable signature help popup when inside function calls
+      lsp_signature.on_attach({
+        bind = true,
+        floating_window = true,
+        hint_enable = true,
+        handler_opts = { border = "rounded" },
+      }, bufnr)
+    end
+
     -- --------------------------------------------------------------
     -- Language server setups
     -- --------------------------------------------------------------
@@ -36,6 +50,7 @@ return {
     -- TypeScript / JavaScript server
     lspconfig.ts_ls.setup({
       capabilities = capabilities, -- enable autocompletion
+      on_attach = on_attach,       -- enable function parameter info
     })
 
     -- HTML server
@@ -77,6 +92,7 @@ return {
     -- Lua server (with extra settings)
     lspconfig.lua_ls.setup({
       capabilities = capabilities,
+      on_attach = on_attach,
       settings = {
         Lua = {
           diagnostics = {
