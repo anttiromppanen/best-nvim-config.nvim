@@ -13,6 +13,7 @@ return {
       },
       max_height = 12,        -- max height of the signature window
       max_width = 80,         -- max width of the signature window
+      padding = " ",
       transparency = nil,     -- keep opaque
       toggle_key = "<C-k>",   -- manual toggle (insert mode)
     })

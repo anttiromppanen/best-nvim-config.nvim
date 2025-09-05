@@ -8,7 +8,7 @@ vim.diagnostic.config({
   float = {
     border = "rounded", -- or "single", "double", "solid", "shadow"
     focusable = true,
-    -- style = "minimal",
+    style = "minimal",
     source = "always", -- show source in diagnostics
     header = "💡 Issues",
     prefix = "→ ",
