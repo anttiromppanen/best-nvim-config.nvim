@@ -73,11 +73,6 @@ return {
       capabilities = capabilities,
     })
 
-    -- Provides linting, links validation, and outline navigation in Markdown
-    lspconfig.marksman.setup({
-      capabilities = capabilities,
-    })
-
     -- validate JSON files (config files, package.json, etc.)
     lspconfig.jsonls.setup({
       capabilities = capabilities,
