@@ -1,3 +1,5 @@
+-- Automatic install and enable of LSP's via vim.lsp.enable()
+
 return {
   "mason-org/mason-lspconfig.nvim",
   opts = {},

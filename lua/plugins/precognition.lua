@@ -1,3 +1,5 @@
+-- Displays movement key hints in buffer
+
 return {
   "tris203/precognition.nvim",
   event = "VeryLazy",
@@ -20,8 +22,6 @@ return {
     gutterHints = {
       G = { text = "G", prio = 10 },
       gg = { text = "gg", prio = 9 },
-      PrevParagraph = { text = "{", prio = 8 },
-      NextParagraph = { text = "}", prio = 8 },
     },
     -- disabled_fts = {
     --     "startify",

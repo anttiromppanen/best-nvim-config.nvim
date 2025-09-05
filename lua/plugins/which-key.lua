@@ -1,3 +1,5 @@
+-- Provides a helpful info window on keymappings. For example pressing the leader key shows all keymaps for leader + <key>
+
 return {
   "folke/which-key.nvim",
   event = "VeryLazy",
