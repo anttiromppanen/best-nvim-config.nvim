@@ -19,6 +19,7 @@
 -- This makes Neovim behave more like a modern IDE (VSCode-style autocomplete).
 -- ============================================================================
 --
+
 return {
   {
     "hrsh7th/cmp-nvim-lsp", -- LSP source for nvim-cmp (language server completions)
@@ -28,10 +29,24 @@ return {
     dependencies = {
       "saadparwaiz1/cmp_luasnip",     -- Connects LuaSnip with nvim-cmp
       "rafamadriz/friendly-snippets", -- Prebuilt community snippets
+      "mlaursen/vim-react-snippets",  -- React snippets for LuaSnip
     },
     config = function()
+      local luasnip = require("luasnip")
+
       -- Load friendly-snippets
       require("luasnip.loaders.from_snipmate").lazy_load()
+
+      -- Load vim-react-snippets only for React filetypes
+      require("vim-react-snippets").lazy_load({
+        filetypes = { "javascriptreact", "typescriptreact" },
+      })
+
+      -- Optional configuration for vim-react-snippets
+      local config = require("vim-react-snippets.config")
+      config.readonly_props = false              -- Do not wrap props in Readonly<T>
+      config.test_framework = "vitest"           -- Use Vitest instead of Jest
+      config.test_renderer_path = "@/test-utils" -- Custom test renderer path
     end,
   },
   {
@@ -45,10 +60,8 @@ return {
       local cmp = require("cmp")
 
       cmp.setup({
-        -- Define how snippets expand in the completion menu
         snippet = {
           expand = function(args)
-            -- Use LuaSnip to expand snippet bodies
             require("luasnip").lsp_expand(args.body)
           end,
         },
@@ -64,19 +77,31 @@ return {
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
           ["<C-y>"] = cmp.mapping.confirm({ select = true }),
-
-          ['<C-n>'] = cmp.mapping.select_next_item(),
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
+          ["<C-n>"] = cmp.mapping.select_next_item(),
+          ["<C-p>"] = cmp.mapping.select_prev_item(),
         }),
 
-        -- Configure completion sources (priority order matters)
+        -- Define completion sources with priority
         sources = cmp.config.sources({
-          { name = "nvim_lsp" }, -- Language server completions
-          { name = "luasnip" },
-        }, {
-          { name = "buffer" }, -- Words from current buffer
-          { name = "path" },   -- File path suggestions
+          { name = "path",     priority = 1000 }, -- Filesystem paths
+          { name = "luasnip",  priority = 900 },  -- Snippets (friendly-snippets + vim-react-snippets)
+          { name = "nvim_lsp", priority = 800 },  -- LSP completions
+          { name = "buffer",   priority = 500 },  -- Words from current buffer
+          { name = "emmet_ls", priority = 200 },  -- Emmet (deprioritized)
         }),
+
+        -- Show where each completion item came from
+        formatting = {
+          format = function(entry, vim_item)
+            vim_item.menu = ({
+              nvim_lsp = "[LSP]",
+              luasnip  = "[Snippet]",
+              buffer   = "[Buffer]",
+              path     = "[Path]",
+            })[entry.source.name]
+            return vim_item
+          end,
+        },
       })
     end,
   },
