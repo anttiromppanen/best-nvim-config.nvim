@@ -67,6 +67,14 @@ return {
       on_attach = on_attach,       -- enable function parameter info
     })
 
+    -- Disable duplicate warnings (using eslint_d from null_ls)
+    lspconfig.eslint.setup({
+      on_attach = function(client, bufnr)
+        -- immediately stop the client
+        client.stop()
+      end,
+    })
+
     -- HTML server
     lspconfig.html.setup({
       capabilities = capabilities,
