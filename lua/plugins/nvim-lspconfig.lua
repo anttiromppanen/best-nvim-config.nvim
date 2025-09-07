@@ -41,6 +41,20 @@ return {
         hint_enable = true,
         handler_opts = { border = "rounded" },
       }, bufnr)
+
+      -- autoformat on save if the server supports it
+      if client.supports_method("textDocument/formatting") then
+        local augroup = vim.api.nvim_create_augroup("LspFormatting", { clear = false })
+
+        vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+        vim.api.nvim_create_autocmd("BufWritePre", {
+          group = augroup,
+          buffer = bufnr,
+          callback = function()
+            vim.lsp.buf.format({ bufnr = bufnr })
+          end,
+        })
+      end
     end
 
     -- --------------------------------------------------------------
@@ -56,31 +70,37 @@ return {
     -- HTML server
     lspconfig.html.setup({
       capabilities = capabilities,
+      on_attach = on_attach,
     })
 
     -- Tailwind server
     lspconfig.tailwindcss.setup({
       capabilities = capabilities,
+      on_attach = on_attach,
     })
 
     -- CSS, CSS Modules, SCSS, etc.
     lspconfig.cssls.setup({
       capabilities = capabilities,
+      on_attach = on_attach,
     })
 
     --Syntax highlighting, schema validation, autocompletion for schema.prisma
     lspconfig.prismals.setup({
       capabilities = capabilities,
+      on_attach = on_attach,
     })
 
     -- validate JSON files (config files, package.json, etc.)
     lspconfig.jsonls.setup({
       capabilities = capabilities,
+      on_attach = on_attach,
     })
 
     -- expand HTML-like abbreviations (div.flex > p.text-lg)
     lspconfig.emmet_ls.setup({
       capabilities = capabilities,
+      on_attach = on_attach,
       filetypes = { "html", "css", "javascriptreact", "typescriptreact" },
     })
 

@@ -25,8 +25,8 @@ vim.diagnostic.config({
 })
 
 -- Set highlight for the currently active parameter in lsp_signature popup
-vim.api.nvim_set_hl(0, "LspSignatureActiveParameter", {
-  fg = "#ffffff", -- white text
-  bg = "#1f4d2f", -- dark parakeet green
-  bold = true,    -- optional: make it bold
-})
+--vim.api.nvim_set_hl(0, "LspSignatureActiveParameter", {
+--  fg = "#ffffff", -- white text
+--  bg = "#1f4d2f", -- dark parakeet green
+--  bold = true,    -- optional: make it bold
+--})

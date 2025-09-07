@@ -31,7 +31,7 @@ return {
         null_ls.builtins.formatting.stylua,      -- Lua code formatting
         null_ls.builtins.formatting.prettierd,   -- Prettier for JS/TS/HTML/CSS/etc.
         null_ls.builtins.completion.spell,       -- Spell checker for completion
-        require("none-ls.diagnostics.eslint_d"), -- ESLint diagnostics via daemon
+        require("none-ls.diagnostics.eslint_d"), -- ESLint diagnostics via daemon,
       },
 
       -- on_attach runs when an LSP client attaches to a buffer
