@@ -3,5 +3,11 @@
 
 return {
   "mason-org/mason.nvim",
-  opts = {}
+  opts = {
+    ensure_installed = {
+      "stylua",
+      "prettierd",
+      "eslint_d",
+    },
+  },
 }
