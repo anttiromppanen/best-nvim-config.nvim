@@ -20,111 +20,123 @@
 -- ============================================================================
 
 return {
-  "neovim/nvim-lspconfig", -- Main plugin for configuring LSP servers
-  lazy = false,            -- Ensure this loads immediately at startup
-  config = function()
-    -- Extend LSP client capabilities with completion support from nvim-cmp
-    local capabilities = require("cmp_nvim_lsp").default_capabilities()
+	"neovim/nvim-lspconfig", -- Main plugin for configuring LSP servers
+	lazy = false, -- Load immediately
+	config = function()
+		-- Extend LSP client capabilities with completion support from nvim-cmp
+		local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-    -- Load the LSP configuration module
-    local lspconfig = require("lspconfig")
+		-- Load lsp_signature
+		local lsp_signature = require("lsp_signature")
 
-    -- Load lsp_signature
-    local lsp_signature = require("lsp_signature")
+		-- Common on_attach function
+		local on_attach = function(client, bufnr)
+			-- Enable signature help popup when inside function calls
+			lsp_signature.on_attach({
+				bind = true,
+				floating_window = true,
+				hint_enable = true,
+				handler_opts = { border = "rounded" },
+			}, bufnr)
 
-    -- Common on_attach function
-    local on_attach = function(client, bufnr)
-      -- enable signature help popup when inside function calls
-      lsp_signature.on_attach({
-        bind = true,
-        floating_window = true,
-        hint_enable = true,
-        handler_opts = { border = "rounded" },
-      }, bufnr)
+			-- Autoformat on save if the server supports it
+			if client.supports_method("textDocument/formatting") then
+				local augroup = vim.api.nvim_create_augroup("LspFormatting", { clear = false })
+				vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+				vim.api.nvim_create_autocmd("BufWritePre", {
+					group = augroup,
+					buffer = bufnr,
+					callback = function()
+						vim.lsp.buf.format({ bufnr = bufnr })
+					end,
+				})
+			end
+		end
 
-      -- autoformat on save if the server supports it
-      if client.supports_method("textDocument/formatting") then
-        local augroup = vim.api.nvim_create_augroup("LspFormatting", { clear = false })
+		-- --------------------------------------------------------------
+		-- Language server configurations (new vim.lsp.config style)
+		-- --------------------------------------------------------------
 
-        vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-        vim.api.nvim_create_autocmd("BufWritePre", {
-          group = augroup,
-          buffer = bufnr,
-          callback = function()
-            vim.lsp.buf.format({ bufnr = bufnr })
-          end,
-        })
-      end
-    end
+		vim.lsp.config["tsserver"] = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+		}
 
-    -- --------------------------------------------------------------
-    -- Language server setups
-    -- --------------------------------------------------------------
+		vim.lsp.config["eslint"] = {
+			on_attach = function(client)
+				client.stop() -- disable duplicate diagnostics (use null-ls instead)
+			end,
+		}
 
-    -- TypeScript / JavaScript server
-    lspconfig.ts_ls.setup({
-      capabilities = capabilities, -- enable autocompletion
-      on_attach = on_attach,       -- enable function parameter info
-    })
+		vim.lsp.config["html"] = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+		}
 
-    -- Disable duplicate warnings (using eslint_d from null_ls)
-    lspconfig.eslint.setup({
-      on_attach = function(client, bufnr)
-        -- immediately stop the client
-        client.stop()
-      end,
-    })
+		vim.lsp.config["tailwindcss"] = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+		}
 
-    -- HTML server
-    lspconfig.html.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
+		vim.lsp.config["cssls"] = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+		}
 
-    -- Tailwind server
-    lspconfig.tailwindcss.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
+		vim.lsp.config["prismals"] = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+		}
 
-    -- CSS, CSS Modules, SCSS, etc.
-    lspconfig.cssls.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
+		vim.lsp.config["jsonls"] = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+		}
 
-    --Syntax highlighting, schema validation, autocompletion for schema.prisma
-    lspconfig.prismals.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
+		vim.lsp.config["emmet_ls"] = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+			filetypes = { "html", "css", "javascriptreact", "typescriptreact" },
+		}
 
-    -- validate JSON files (config files, package.json, etc.)
-    lspconfig.jsonls.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
+		vim.lsp.config["lua_ls"] = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+			settings = {
+				Lua = {
+					diagnostics = {
+						globals = { "vim" }, -- recognize `vim` global
+					},
+				},
+			},
+		}
 
-    -- expand HTML-like abbreviations (div.flex > p.text-lg)
-    lspconfig.emmet_ls.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-      filetypes = { "html", "css", "javascriptreact", "typescriptreact" },
-    })
+		-- --------------------------------------------------------------
+		-- Autostart servers on matching filetypes
+		-- --------------------------------------------------------------
 
-    -- Lua server (with extra settings)
-    lspconfig.lua_ls.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = {
-        Lua = {
-          diagnostics = {
-            -- Tell the Lua language server to recognize `vim` as a global
-            -- (avoids "undefined global 'vim'" errors in Neovim configs)
-            globals = { "vim" },
-          },
-        },
-      },
-    })
-  end,
+		local filetype_to_servers = {
+			typescript = { "tsserver", "eslint" },
+			javascript = { "tsserver", "eslint" },
+			javascriptreact = { "tsserver", "eslint" },
+			typescriptreact = { "tsserver", "eslint" },
+			html = { "html", "emmet_ls" },
+			css = { "cssls", "emmet_ls", "tailwindcss" },
+			scss = { "cssls", "tailwindcss" },
+			lua = { "lua_ls" },
+			json = { "jsonls" },
+			prisma = { "prismals" },
+		}
+
+		for ft, servers in pairs(filetype_to_servers) do
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = ft,
+				callback = function(args)
+					for _, server in ipairs(servers) do
+						vim.lsp.start(vim.lsp.config[server], { bufnr = args.buf })
+					end
+				end,
+			})
+		end
+	end,
 }
