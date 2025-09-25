@@ -119,7 +119,7 @@ return {
 			settings = {
 				Lua = {
 					diagnostics = {
-						-- Tell the Lua language server to recognize `vim` as a global
+						-- Tell the Lua language server to recognize vim as a global
 						-- (avoids "undefined global 'vim'" errors in Neovim configs)
 						globals = { "vim" },
 					},
