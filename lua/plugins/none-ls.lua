@@ -18,45 +18,38 @@
 -- ============================================================================
 
 return {
-  "nvimtools/none-ls.nvim",          -- Main null-ls plugin
-  dependencies = {
-    "nvimtools/none-ls-extras.nvim", -- Provides extra built-in sources
-  },
-  config = function()
-    local null_ls = require("null-ls")
+	"nvimtools/none-ls.nvim",
+	dependencies = { "nvimtools/none-ls-extras.nvim" },
+	config = function()
+		local null_ls = require("null-ls")
 
-    null_ls.setup({
-      -- Define the tools (sources) to hook into LSP
-      sources = {
-        null_ls.builtins.formatting.stylua,      -- Lua code formatting
-        null_ls.builtins.formatting.prettierd,   -- Prettier for JS/TS/HTML/CSS/etc.
-        null_ls.builtins.completion.spell,       -- Spell checker for completion
-        require("none-ls.diagnostics.eslint_d"), -- ESLint diagnostics via daemon,
-      },
+		local augroup = vim.api.nvim_create_augroup("LspFormatting", { clear = true })
 
-      -- on_attach runs when an LSP client attaches to a buffer
-      on_attach = function(client, bufnr)
-        -- Create (or reuse) an augroup for autoformatting
-        local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-
-        -- Check if the client supports formatting
-        if client.supports_method("textDocument/formatting") then
-          -- Clear any old autocmds for this buffer
-          vim.api.nvim_clear_autocmds({
-            group = augroup,
-            buffer = bufnr,
-          })
-
-          -- Autoformat on save (BufWritePre)
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            group = augroup,
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format({ bufnr = bufnr })
-            end,
-          })
-        end
-      end,
-    })
-  end,
+		null_ls.setup({
+			sources = {
+				null_ls.builtins.formatting.stylua,
+				null_ls.builtins.formatting.prettierd,
+				null_ls.builtins.completion.spell,
+				require("none-ls.diagnostics.eslint_d"),
+			},
+			on_attach = function(client, bufnr)
+				if client.supports_method("textDocument/formatting") then
+					vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+					vim.api.nvim_create_autocmd("BufWritePre", {
+						group = augroup,
+						buffer = bufnr,
+						callback = function()
+							vim.lsp.buf.format({
+								async = false,
+								bufnr = bufnr,
+								filter = function(c)
+									return c.name == "null-ls"
+								end,
+							})
+						end,
+					})
+				end
+			end,
+		})
+	end,
 }
