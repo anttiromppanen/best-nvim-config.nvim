@@ -2,12 +2,12 @@
 -- Easily install and manage LSP servers, DAP servers, linters, and formatters.
 
 return {
-  "mason-org/mason.nvim",
-  opts = {
-    ensure_installed = {
-      "stylua",
-      "prettierd",
-      "eslint_d",
-    },
-  },
+	"mason-org/mason.nvim",
+	opts = {
+		ensure_installed = {
+			"stylua",
+			"prettierd",
+			"eslint_d",
+		},
+	},
 }

@@ -13,7 +13,7 @@ Key points:
 
 return {
   "nvim-treesitter/nvim-treesitter",
-  branch = "master",                            -- always track the latest master branch
+  branch = "main",                              -- always track the latest master branch
   lazy = false,                                 -- load immediately (not lazily)
   build = ":TSUpdate",                          -- update installed parsers after install/update
   opts = {
@@ -24,19 +24,4 @@ return {
       additional_vim_regex_highlighting = true, -- also keep regex-based highlighting
     },
   },
-  config = function(_, opts)
-    -- Load Treesitter with the provided options above
-    require("nvim-treesitter.configs").setup(opts)
-
-    -- Extend Treesitter with a custom parser for Prisma
-    -- This allows Treesitter to correctly parse and highlight `.prisma` files
-    local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-    parser_config.prisma = {
-      install_info = {
-        url = "https://github.com/Prisma/tree-sitter-prisma", -- source repo for Prisma grammar
-        files = { "src/parser.c" },                           -- files to build the parser
-        branch = "main",                                      -- branch to pull from
-      },
-    }
-  end,
 }
