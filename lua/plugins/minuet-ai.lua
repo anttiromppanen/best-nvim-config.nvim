@@ -7,7 +7,8 @@ return {
 				openai_fim_compatible = {
 					api_key = "TERM",
 					end_point = "http://172.21.144.1:1234/v1/completions",
-					model = "qwen2.5-coder-1.5b-instruct",
+					-- model = "qwen2.5-coder-1.5b-instruct",
+					model = "qwen/qwen3.5-9b",
 				},
 			},
 			n_completions = 1,

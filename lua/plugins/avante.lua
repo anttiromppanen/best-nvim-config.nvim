@@ -15,13 +15,14 @@ return {
 		providers = {
 			openai = {
 				endpoint = "http://172.21.144.1:1234/v1",
-				model = "qwen2.5-coder-7b-instruct",
+				-- model = "qwen2.5-coder-7b-instruct",
+				model = "qwen/qwen3.5-9b",
 				timeout = 100000,
 
 				api_key_name = "LM_STUDIO_API_KEY",
 				extra_request_body = {
 					temperature = 0.1,
-					max_completion_tokens = 4096,
+					max_completion_tokens = 8192,
 				},
 			},
 		},
